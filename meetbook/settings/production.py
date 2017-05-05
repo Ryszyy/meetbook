@@ -25,7 +25,7 @@ SECRET_KEY = 't)!yo^541uy5n7l9m$dosr@k96aoh%dlu6t*5#4$+ift&3^)k)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['meetbook.herokuapp.com']
+ALLOWED_HOSTS = ["meetbook.herokuapp.com"]
 
 
 # Application definition
