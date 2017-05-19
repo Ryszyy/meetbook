@@ -1,0 +1,16 @@
+body {
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+#welcoming:active {
+    color: white;
+}
+#welcoming:hover {
+    color: red;
+}
+#welcoming:visited {
+    color: white;
+}
+#welcoming:link {
+    color: white;
+}

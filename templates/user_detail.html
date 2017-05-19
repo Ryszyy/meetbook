@@ -1,0 +1,31 @@
+{% extends "base_detail.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+	<div class="jumbotron col-md-7 col-md-offset-1" style="max-height: 470px; padding-top: 20px; margin-top: 20px;">
+		<div class="container">
+			<div>
+				<div style="float: left; padding-right: 40px; ">
+					<h2>
+					{{object|capfirst}}
+					</h2>
+					{% if object.picture %}
+						<img src="{{ object.picture.url }}" width="300" height="300">
+					{% else %}
+						<img src="/media/default/defaultuser.png" width="300" height="300">
+					{% endif %}
+					<br style="clear: left;" />
+					<a href="">Change picture</a>
+				</div>
+				<div style="float: left; padding-top: 100px;">
+					<p>First Name : {{ object.user_auth.first_name }}</p>
+					<p>Last Name : {{ object.user_auth.last_name }}</p>
+					<p>Email : {{ object.user_auth.email }}</p>
+					<p>Localization : {{ object.localization }}</p>
+					<a href="">Edit</a>
+				</div>
+				<br style="clear: left;" />
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

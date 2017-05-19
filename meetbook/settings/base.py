@@ -66,6 +66,9 @@ TEMPLATES = [
         },
     },
 ]
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'profile.context_processors.friends_list',
+)
 
 WSGI_APPLICATION = 'meetbook.wsgi.application'
 
