@@ -31,14 +31,14 @@ def page(request):
         if form.is_valid():
             # name = form.cleaned_data['name']
             # last_name = form.cleaned_data['last_name']
-            login = form.cleaned_data['login']
+            login = form.cleaned_data['login'].lower()
             password = form.cleaned_data['password']
             email = form.cleaned_data['email']
-            user_auth = User.objects.create_user(username=login, password=password)
+            user_auth = User.objects.create_user(username=login, email=email, password=password)
             user_auth.is_active = True
             # user_auth.first_name = name
             # user_auth.last_name = last_name
-            user_auth.email = email
+
             user_auth.save()
             new_user = UserProfile(user_auth=user_auth)
             new_user.save()

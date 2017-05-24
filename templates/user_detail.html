@@ -1,31 +1,60 @@
 {% extends "base_detail.html" %}
 {% load crispy_forms_tags %}
+{% load humanize %}
 {% block content %}
-	<div class="jumbotron col-md-7 col-md-offset-1" style="max-height: 470px; padding-top: 20px; margin-top: 20px;">
+	<div class="jumbotron col-md-10 col-md-offset-1" style="padding-top: 20px; margin-top: 20px; float: left;">
 		<div class="container">
 			<div>
 				<div style="float: left; padding-right: 40px; ">
-					<h2>
+					<h1>
 					{{object|capfirst}}
-					</h2>
+					</h1>
 					{% if object.picture %}
 						<img src="{{ object.picture.url }}" width="300" height="300">
 					{% else %}
 						<img src="/media/default/defaultuser.png" width="300" height="300">
 					{% endif %}
 					<br style="clear: left;" />
-					<a href="">Change picture</a>
 				</div>
-				<div style="float: left; padding-top: 100px;">
-					<p>First Name : {{ object.user_auth.first_name }}</p>
-					<p>Last Name : {{ object.user_auth.last_name }}</p>
+				<div style="float: left; padding-top: 130px;">
+					<p>Forename : {{ object.user_auth.first_name }}</p>
+					<p>Surname : {{ object.user_auth.last_name }}</p>
 					<p>Email : {{ object.user_auth.email }}</p>
-					<p>Localization : {{ object.localization }}</p>
-					<a href="">Edit</a>
+					<p>Location : {{ object.location.city }}</p>
+					{% if user|lower == param|lower %}
+						<a href="{% url 'user_update' user.username %}">Update informations</a>
+						{% elif object not in profile.friends.all %}
+						<a href="{% url 'friend_add' user.username %}">Add Friend</a>
+					{% endif %}
 				</div>
-				<br style="clear: left;" />
+				<div style="margin-top: 20px; float: right; padding: 20px ;padding-right:50px;border-width: 1px;border-style: solid;max-width: 300px;background-color: #f5f5f5;min-width: 250px;">
+					<h3>Friends list</h3>
+					<hr>
+					{% if user.is_authenticated %}
+						{% for friend in object.friends.all %}
+							<a href="{% url 'user_detail' friend.user_auth.username %}">{{friend}}</a> - <small>{{friend.user_auth.last_login|naturaltime}}</small><br>
+						{% endfor %}
+					{% endif %}
+					</div><!-- /.blog-sidebar -->
+					<div style="margin-top: 20px;margin-right: 20px; float: right; padding: 20px ;padding-right:50px;border-width: 1px;border-style: solid;max-width: 300px;background-color: #f5f5f5;max-width: 190px;">
+						<h3>Groups list</h3>
+						<hr>
+						{% if user.is_authenticated %}
+						{% endif %}
+						</div><!-- /.blog-sidebar -->
+					</div>
+				</div>
+				<div class="container">
+					<br>
+					<h2>Bio</h2>
+					<p>{{ object.bio }}</p>
+				</div>
 			</div>
-		</div>
-	</div>
-
-{% endblock %}
+		{% endblock %}
+		{% block delete_acc %}
+			{% if user.is_authenticated and user|lower == param|lower %}
+				<li style="float: right; padding-right: 10px;"><small><a id="delete_acc" href="{% url 'user_delete' user.username %}">delete account</a></small></li>
+				{% elif object in profile.friends.all%}
+				<li style="float: right; padding-right: 10px;"><small><a id="delete_acc" href="{% url 'friend_delete' user.username %}">remove friend</a></small></li>
+			{% endif %}
+		{% endblock %}

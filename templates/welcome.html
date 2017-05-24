@@ -1,17 +1,35 @@
 {% extends "basebase.html" %}
 {% load crispy_forms_tags %}
+{% load humanize %}
+{% load static %}
+{% block head %}
+	<style>
+	#map {
+	height: 100%;
+	}
+	</style>
+	<script src="{% static 'js/map.js' %}" type="text/javascript"></script>
+{% endblock %}
 {% block sidepicture %}
 	{% if user.is_authenticated %}
 		{% if profile.picture %}
-			<a href="{% url 'user_detail' user.username %}"><img src="{{ profile.picture.url }}" width="185" height="185"></a>
+			<a style="hover:none" href="{% url 'user_detail' user.username %}"><img src="{{ profile.picture.url }}" width="185" height="185"></a>
 		{% else %}
-			<a href="{% url 'user_detail' user.login %}"><img src="/media/default/defaultuser.png" width="185" height="185"></a>
+			<a href="{% url 'user_detail' user.username %}"><img src="/media/default/defaultuser.png" width="185" height="185"></a>
 		{% endif %}
 	{% endif %}
 {% endblock %}
 {% block content %}
 	{% if user.is_authenticated %}
-		<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d20039.56190755875!2d17.063563472167974!3d51.10947052508667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2spl!4v1494539795482" width="700" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+		<iframe
+		width="700"
+		height="500"
+		frameborder="0" style="border:0"
+		src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD1p_jSHFFqhSiVL6BttWb8fFF522u510g
+		&q={{ profile.location }}" allowfullscreen>
+		</iframe>
+		
+		<div id="map"></div>
 	{% else %}
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div class="container-fluid">
@@ -56,13 +74,18 @@
 		</div>
 	{% endif %}
 {% endblock %}
-
-
-
 {% block friends %}
 	{% if user.is_authenticated %}
-		{% for friend in profile.friends.all %}
-			<p><a href="">{{friend}}</a> - {{friend.user_auth.last_login|timesince}} ago</p>
-		{% endfor %}
-	{% endif %}
-{% endblock %} 
+		<div style="margin-top: 30px; margin-right: 40px; float: right; padding: 20px ;padding-right:1px;border-width: 1px;border-style: solid;max-width: 300px;background-color: #f5f5f5;min-width: 250px;">
+			<h3>Friends list <form style="float: right; padding-right: 60px;" action="{% url 'users_list' %}">
+				<button class="btn btn-primary btn-sm" type="submit"><span class="glyphicon glyphicon-plus" aria-hidden="true"></button>
+				</form></h3>
+
+				
+				<hr>
+				{% for friend in profile.friends.all %}
+					<p><a href="{% url 'user_detail' friend.user_auth.username %}">{{friend}}</a> - {{friend.user_auth.last_login|naturaltime}}</p>
+				{% endfor %}
+			</div>
+		{% endif %}
+	{% endblock %}

@@ -39,3 +39,18 @@ class Form_login(forms.Form):
         if not authenticate(username=username, password=password):
             raise forms.ValidationError("Wrong login or password")
         return self.cleaned_data
+
+
+class Form_update_user(forms.Form):
+    first_name = forms.CharField(label="Forename")
+    last_name = forms.CharField(label="Surname")
+    bio = forms.CharField(label='Bio', widget=forms.Textarea)
+    location = forms.CharField(label="City")
+    picture = forms.ImageField(label="Picture")
+
+
+class Form_update_user_later(forms.Form):
+
+    bio = forms.CharField(label='Bio', widget=forms.Textarea)
+    location = forms.CharField(label="City")
+    picture = forms.ImageField(label="Picture")

@@ -18,6 +18,7 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from profiles.views import create_user, logout
 from profiles.views.cbv.user_crud import UserDetailView, UsersList, user_delete, user_update, test
+from profiles.views.cbv.friend_crud import friend_add, friend_delete
 
 urlpatterns = [
     url(r'^$', create_user.page, name='welcome'),
@@ -26,7 +27,9 @@ urlpatterns = [
     url(r'^user_detail/(?P<slug>[-\w]+)$', UserDetailView.as_view(), name='user_detail'),
     url(r'^user_delete/(?P<slug>[-\w]+)$', user_delete, name="user_delete"),
     url(r'^user_update/(?P<slug>[-\w]+)$', user_update, name="user_update"),
-    url(r'^test$', test, name="test"),
+    url(r'^testmap$', test, name="testmap"),
+    url(r'^friend_add/(?P<slug>[-\w]+)$', friend_add, name="friend_add"),
+    url(r'^friend_delete/(?P<slug>[-\w]+)$', friend_delete, name="friend_delete"),
     # url(r'^group_create$', CreateView.as_view(model=GroupProfile,
     #                                           template_name="group_create.html",
     #                                           success_url='group_detail'),

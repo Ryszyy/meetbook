@@ -6,6 +6,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 		<title>Meetbook</title>
 		<!-- Latest compiled and minified CSS -->
@@ -13,6 +14,10 @@
 		<!-- Optional theme -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 		<link rel="stylesheet" href="{% static 'css/main.css' %}">
+		<link rel="stylesheet" href="{% static 'css/index_sidebar.css' %}">
+		
+		{% block head %}
+		{% endblock %}
 	</head>
 	<body>
 		<nav class="navbar navbar-inverse navbar-fixed-top">
@@ -31,15 +36,11 @@
 						<ul class="nav navbar-nav navbar-right">
 							<li>
 								<form class="navbar-form navbar-right" action="{% url 'logout' %}">
-									<strong style="color:gray;">You are logged in as {{ user.username }}</strong>
+									<strong style="color:gray;">You are logged in as {{ user.username|capfirst }}</strong>
 									<button type="submit" class="btn btn-success">Log out</button>
 								</form>
 							</li>
 						</ul>
-						
-						<form class="navbar-form navbar-right" method="post" action="{% url 'users_list' %}">{% csrf_token %}
-							<input type="text" class="form-control" placeholder="Search users">
-						</form>
 					</div>
 				{% endif %}
 			</div>
@@ -58,7 +59,7 @@
 									<h3 style="padding-left: 10px;">{{ user.first_name }} {{ user.last_name }}</h3>
 								{% endif %}
 								<!-- 								{% if user.bio and user.bio %}
-										<h3 style="padding-left: 10px;">{{ user.first_name }} {{ user.last_name }}</h3>
+									<h3 style="padding-left: 10px;">{{ user.first_name }} {{ user.last_name }}</h3>
 								{% endif %} -->
 							</li>
 							<li><a href="#"><h4>Groups</h4></a></li>
@@ -73,28 +74,29 @@
 					{% endblock %}
 				</div>
 				{% if user.is_authenticated %}
-					<div style="margin-top: 30px; margin-right: 60px; float: right; padding: 20px ;padding-right:50px;background-color: #f5f5f5; border-radius: 4px; max-width: 300px;">
-						<h3>Friends list</h3>
-						<hr>
-						{% block friends %}
-						{% endblock %}
-						</div><!-- /.blog-sidebar -->
-					{% endif %}
-					<div>
-						{% block nosidebar %}
-						{% endblock %}
-					</div>
+					{% block friends %}
+					{% endblock %}
+					</div><!-- /.blog-sidebar -->
+				{% endif %}
+				<div>
+					{% block nosidebar %}
+					{% endblock %}
 				</div>
 			</div>
-			<hr>
-			<footer style="float: right; padding-right: 40px;">
-				<p>&copy; 2017 Meetbook, Inc.</p>
-			</footer>
-			<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-			<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-			
-			<!-- Latest compiled and minified JavaScript -->
-			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-		</body>
-	</html>
+		</div>
+		<hr>
+		<footer style="float: right; padding-right: 40px;">
+			<ul style=" list-style-type: none;">
+				<li style = "float: left;"><p>&copy; 2017 Meetbook, Inc.</p></li>
+			</ul>
+		</footer>
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+		
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6wYCxO-vnSAE4QMWoDmzbZVN6kxiXDfQ&callback=initMap" async defer>
+		</script>
+	</body>
+</html>
