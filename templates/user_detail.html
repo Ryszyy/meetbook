@@ -6,7 +6,7 @@
 		<div class="container">
 			<div>
 				<div style="float: left; padding-right: 40px; ">
-					<h1>
+					<h1 style="text-align: center;">
 					{{object|capfirst}}
 					</h1>
 					{% if object.picture %}
@@ -17,10 +17,14 @@
 					<br style="clear: left;" />
 				</div>
 				<div style="float: left; padding-top: 130px;">
-					<p>Forename : {{ object.user_auth.first_name }}</p>
-					<p>Surname : {{ object.user_auth.last_name }}</p>
-					<p>Email : {{ object.user_auth.email }}</p>
-					<p>Location : {{ object.location.city }}</p>
+					{% if object.user_auth.first_name  %}
+						<p>Forename : {{ object.user_auth.first_name }}</p>
+						<p>Surname : {{ object.user_auth.last_name }}</p>
+						<p>Location : {{ object.location.city }}</p>
+					{% endif %}
+					{% if user|lower == param|lower or object in profile.friends.all %}
+						<p>Email : {{ object.user_auth.email }}</p>
+					{% endif %}
 					{% if user|lower == param|lower %}
 						<a href="{% url 'user_update' user.username %}">Update informations</a>
 						{% elif object not in profile.friends.all %}
@@ -46,8 +50,10 @@
 				</div>
 				<div class="container">
 					<br>
-					<h2>Bio</h2>
-					<p>{{ object.bio }}</p>
+					{% if object.bio %}
+						<h2>Bio</h2>
+						<p>{{ object.bio }}</p>
+					{% endif %}
 				</div>
 			</div>
 		{% endblock %}

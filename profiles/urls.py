@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^users_list$', UsersList.as_view(), name="users_list"),
     url(r'^user_detail/(?P<slug>[-\w]+)$', UserDetailView.as_view(), name='user_detail'),
     url(r'^user_delete/(?P<slug>[-\w]+)$', user_delete, name="user_delete"),
+    # url(r'^user_delete/(?P<slug>[-\w]+)$', UserDelete.as_view(), name='user_delete'),
     url(r'^user_update/(?P<slug>[-\w]+)$', user_update, name="user_update"),
     url(r'^testmap$', test, name="testmap"),
     url(r'^friend_add/(?P<slug>[-\w]+)$', friend_add, name="friend_add"),

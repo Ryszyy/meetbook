@@ -1,7 +1,8 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.views.generic import DeleteView
 from profiles.models import UserProfile, Location
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -31,7 +32,8 @@ class UsersList(ListView):
         context = super(UsersList, self).get_context_data(**kwargs)
         profile = UserProfile.objects.get(user_auth=self.request.user)
         context['profile'] = profile
-        users_list = UserProfile.objects.exclude(friends__in=profile.friends.all())
+        users_list = UserProfile.objects.exclude(friends__in=profile.friends.all()).exclude(user_auth=self.request.user)
+
         context['users_list'] = users_list
         return context
 
@@ -43,10 +45,10 @@ def user_delete(request, slug):
             user_ad = request.user
             user_ad.delete()
             logout(request)
-            return render(request, 'user_delete.html', {})
+            return redirect('welcome')
         return render(request, 'user_delete.html', {})
     else:
-        return HttpResponse('You have not permissions to do that')
+        return HttpResponse('You have no permissions to enter that site')
 
 
 @login_required
