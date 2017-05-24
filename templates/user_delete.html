@@ -1,8 +1,9 @@
-<h3>Do you want to delete your profile?</h3>
-<form method="post" action="{% url 'welcome' %}">
-	{% csrf_token %}
-	<table>
-		{{ form.as_table }}
-	</table>
-	<p><input type="submit" value="Delete" /></p>
-</form>
+{% extends "base_detail.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+	<h1 style="text-align: center;margin-top: 200px;">Do you want to delete your profile?</h1>
+	<form style="text-align:center;margin-bottom: 150px;; " method="post" action="{% url 'welcome' %}">
+		{% csrf_token %}
+		<button style="text-align: center;margin-top: 30px;" type="submit" class="btn btn-success btn-lg" ><h2 style="margin-top: 5px;margin-bottom: : 5px;">Delete</h2></button>
+	</form>
+{% endblock %}
