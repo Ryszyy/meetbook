@@ -1,5 +1,5 @@
 from django.contrib import admin
-from profiles.models import UserProfile, Location, Intrest, GroupProfile, Event
+from profiles.models import UserProfile, Location, Intrest, GroupProfile, Event, Invite
 # Register your models here.
 
 
@@ -16,3 +16,4 @@ admin.site.register(Location)
 admin.site.register(Intrest)
 admin.site.register(GroupProfile)
 admin.site.register(Event)
+admin.site.register(Invite)

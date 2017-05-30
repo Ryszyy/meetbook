@@ -1,0 +1,29 @@
+{% extends "basebase.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% block sidepicture %}
+	{% if user.is_authenticated %}
+		{% if profile.picture %}
+			<a href="{% url 'user_detail' user.username %}"><img src="{{ profile.picture.url }}" width="185" height="185"></a>
+		{% else %}
+			<a href="{% url 'user_detail' user.username %}"><img src="/media/default/defaultuser.png" width="185" height="185"></a>
+		{% endif %}
+	{% endif %}
+{% endblock %}
+{% block content %}
+	<div class="col-md-12 col-md-offset-2">
+		<h1>Search Event</h1>
+		<hr>
+		<ul style="padding-left: 0px;list-style-type: none; float: left">
+			{% for event in events_list %}
+				<li><h4 style="display: inline"><a href="">{{event}}</a> - </h4>
+				<h6 style="display: inline">{{event.date|naturalday}}</h6></li>
+			<br>
+		{% endfor %}
+	</ul>
+	
+</div>
+{% endblock %}
+{% block footer %}
+<li style="float: right; padding-right: 10px;"><small><a id="footer" href="{% url 'events_list' %}">new events</a></small></li>
+{% endblock %}

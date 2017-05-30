@@ -1,0 +1,16 @@
+{% extends "base_detail.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+	<div class="jumbotron col-md-10 col-md-offset-1" style=" min-height: 450px; padding-top: 20px; margin-top: 20px; float: left;">
+		<h1 style="text-align: center">Create Group</h1>
+		<div class="container col-md-offset-4 col-md-4">
+			<div>
+				<form name="create" method="post" >
+					{% csrf_token %}
+					{{ form|crispy }}
+					<button name="create" type="submit" class="btn btn-success">Create</button>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

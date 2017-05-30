@@ -1,7 +1,6 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.views.generic import DeleteView
-from profiles.models import UserProfile, Location
+from profiles.models import UserProfile, Location, Invite
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.contrib.auth import logout
@@ -19,7 +18,15 @@ class UserDetailView(DetailView):
         context = super(UserDetailView, self).get_context_data(**kwargs)
         profile = UserProfile.objects.get(user_auth=self.request.user)
         context['profile'] = profile
-        context.update({'param': self.request.path.split('/')[-1]})
+        slug = self.request.path.split('/')[-1]
+        context.update({'param': slug})
+        try:
+            other = UserProfile.objects.get(slug=slug)
+            req_sent = Invite.objects.get(r_from=profile, r_to=other)
+            context['req_sent'] = req_sent
+        except Invite.DoesNotExist:
+            req_sent = None
+
         return context
 
 
@@ -32,7 +39,19 @@ class UsersList(ListView):
         context = super(UsersList, self).get_context_data(**kwargs)
         profile = UserProfile.objects.get(user_auth=self.request.user)
         context['profile'] = profile
-        users_list = UserProfile.objects.exclude(friends__in=profile.friends.all()).exclude(user_auth=self.request.user)
+
+        # pending = Invite.objects.filter(r_to=profile)
+
+        req_sent = Invite.objects.filter(r_from=profile)
+
+        context['req_sent'] = req_sent
+        users_list = UserProfile.objects.all()
+        for f in profile.friends.all():
+            users_list = users_list.exclude(user_auth=f)
+        users_list = users_list.exclude(user_auth=self.request.user)
+        for f in req_sent:
+            other = f.r_to
+            users_list = users_list.exclude(user_auth=other)
 
         context['users_list'] = users_list
         return context
@@ -40,13 +59,18 @@ class UsersList(ListView):
 
 @login_required
 def user_delete(request, slug):
-    if request.user.username == slug:
+    profile = UserProfile.objects.get(user_auth=request.user)
+    if profile.slug == slug:
+        context = {
+            "Title": "Do you want to delete your account?",
+            "Confirmation": "Delete",
+        }
         if request.method == 'POST':
             user_ad = request.user
             user_ad.delete()
             logout(request)
             return redirect('welcome')
-        return render(request, 'user_delete.html', {})
+        return render(request, 'delete.html', context)
     else:
         return HttpResponse('You have no permissions to enter that site')
 

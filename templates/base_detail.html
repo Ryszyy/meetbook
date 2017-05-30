@@ -13,17 +13,31 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 		<link rel="stylesheet" href="{% static 'css/main.css' %}">
 		<style type="text/css">
-		body, html {
-			width:100%;
-		}
-
-		#delete_acc:hover {
+		/*html {
+		background: url(/media/default/sky.jpg) no-repeat center center fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+		}*/
+		html{
+			max-width: 1330px;
+			}
+		#footer:hover {
 		color: black;
 		text-decoration: none;
 		}
-		#delete_acc {
+		#footer {
 		color: #e3e3e3;
 				}
+		#delete_mem:hover {
+		color: black;
+		text-decoration: none;
+		}
+		#delete_mem {
+		color: #b1b1b1;
+				}
+
 		</style>
 	</head>
 	<body>
@@ -63,9 +77,9 @@
 		<hr>
 		<ul style=" list-style-type: none;">
 			<li style = "float: right;"><p>&copy; 2017 Meetbook, Inc.</p></li>
-				{% block delete_acc %}
-					
-				{% endblock %}
+			{% block footer %}
+				
+			{% endblock %}
 		</ul>
 	</body>
 </html>

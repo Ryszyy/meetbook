@@ -78,14 +78,29 @@
 	{% if user.is_authenticated %}
 		<div style="margin-top: 30px; margin-right: 40px; float: right; padding: 20px ;padding-right:1px;border-width: 1px;border-style: solid;max-width: 300px;background-color: #f5f5f5;min-width: 250px;">
 			<h3>Friends list <form style="float: right; padding-right: 60px;" action="{% url 'users_list' %}">
-				<button class="btn btn-primary btn-sm" type="submit"><span class="glyphicon glyphicon-plus" aria-hidden="true"></button>
-				</form></h3>
-
-				
-				<hr>
-				{% for friend in profile.friends.all %}
-					<p><a href="{% url 'user_detail' friend.user_auth.username %}">{{friend}}</a> - {{friend.user_auth.last_login|naturaltime}}</p>
+				<button class="btn btn-primary btn-sm" type="submit"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+			</form></h3>
+			
+			<hr>
+			{% for friend in profile.friends.all %}
+				<p><a href="{% url 'user_detail' friend.user_auth.username %}">{{friend}}</a> - {{friend.user_auth.last_login|naturaltime}}</p>
+			{% endfor %}
+			<hr>
+			<h4>Requests</h4>
+			{% for frequest in frequests %}
+				{% if frequest.r_from.user_auth.first_name %}
+					<p>from
+						<a href="{% url 'user_detail' frequest.r_from.user_auth.username %}" >{{frequest.r_from.user_auth.first_name}} {{frequest.r_from.user_auth.last_name}}</a> - {{frequest.when|naturaltime}}</p>
+					{% else %}
+						<p>from <a href="{% url 'user_detail' frequest.r_from.user_auth.username %}">{{frequest.r_from.user_auth}}</a> - {{frequest.when|naturaltime}}</p>
+					{% endif %}
 				{% endfor %}
 			</div>
+			
+		{% endif %}
+	{% endblock %}
+	{% block footer %}
+		{% if not user.is_authenticated %}
+			<small id="footer" style="margin-right: 700px">*You are responsible for your weak password</small>
 		{% endif %}
 	{% endblock %}

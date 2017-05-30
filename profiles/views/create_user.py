@@ -1,6 +1,6 @@
 from django.shortcuts import render, reverse, HttpResponseRedirect
 from profiles.forms import Form_register, Form_login
-from profiles.models import UserProfile
+from profiles.models import UserProfile, Invite
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
@@ -24,6 +24,8 @@ def page(request):
             if request.user.is_authenticated():
                 profile = UserProfile.objects.get(user_auth=request.user)
                 context['profile'] = profile
+                frequests = Invite.objects.filter(r_to=profile).exclude(r_from=profile)
+                context['frequests'] = frequests
             return render(request, "welcome.html", context)
 
     if request.method == 'POST' and 'register' in request.POST:
@@ -51,10 +53,14 @@ def page(request):
             if request.user.is_authenticated():
                 profile = UserProfile.objects.get(user_auth=request.user)
                 context['profile'] = profile
+                frequests = Invite.objects.filter(r_to=profile).exclude(r_from=profile)
+                context['frequests'] = frequests
             return render(request, 'welcome.html', context)
 
     if request.user.is_authenticated():
         profile = UserProfile.objects.get(user_auth=request.user)
         context['profile'] = profile
+        frequests = Invite.objects.filter(r_to=profile).exclude(r_from=profile)
+        context['frequests'] = frequests
 
     return render(request, "welcome.html", context)

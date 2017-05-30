@@ -12,39 +12,48 @@
 {% endblock %}
 {% block content %}
 	<div class="col-md-12 col-md-offset-2">
-		<h1>Add Friends</h1>
+		<h1>Search Friends</h1>
 		<hr>
-		<ul style="list-style-type: none; float: left">
-			{% for user in users_list %}
-				<li><a href="{% url 'user_detail' user.slug %}">
-					{% if user.picture %}
-						<img src="{{ user.picture.url }}" width="70" height="70">
+		<ul style="padding-left: 0px;list-style-type: none; float: left">
+			{% for userq in users_list %}
+				<li><a href="{% url 'user_detail' userq.user_auth.username %}">
+					{% if userq.picture %}
+						<img src="{{ userq.picture.url }}" width="70" height="70">
 					{% else %}
 						<img src="/media/default/defaultuser.png" width="70" height="70">
 					{% endif %}
 				</a>
 				
-				{% if user.user_auth.first_name and user.user_auth.last_name %}
-					<h4 style="display: inline">{{ user.user_auth.first_name }} {{ user.user_auth.last_name }}</h4>
+				{% if userq.user_auth.first_name and userq.user_auth.last_name %}
+					<h4 style="display: inline">{{ userq.user_auth.first_name }} {{ userq.user_auth.last_name }}</h4>
 				{% else %}
-					<h4 style="display: inline">{{ user.user_auth|capfirst }}</h4>
+					<h4 style="display: inline">{{ userq.user_auth|capfirst }}</h4>
 				{% endif %}
 			</li>
 			<br>
 		{% endfor %}
 	</ul>
+	
 </div>
 {% endblock %}
 {% block friends %}
 {% if user.is_authenticated %}
 	<div style="margin-top: 60px; margin-right: 100px; float: right; padding: 20px ;padding-right:1px;border-width: 1px;border-style: solid;max-width: 300px;background-color: #f5f5f5;min-width: 250px;">
-		<h3>Friends list <form style="float: right; padding-right: 60px;" action="{% url 'users_list' %}">
-		</form></h3>
+		<h1>Friends list <form style="float: right; padding-right: 60px;" action="{% url 'users_list' %}">
+		</form></h1>
 		
 		<hr>
 		{% for friend in profile.friends.all %}
 			<p><a href="{% url 'user_detail' friend.user_auth.username %}">{{friend}}</a> - {{friend.user_auth.last_login|naturaltime}}</p>
 		{% endfor %}
+		<hr>
+		{% if profile.pending %}
+			<h4>Requests sent</h4>
+			{% for req in req_sent %}
+				<p>To <a href="{% url 'user_detail' req.r_to %}">{{req.r_to}}</a> - {{req.when|naturaltime}}</p>
+			{% endfor %}
+		{% endif %}
 	</div>
+	
 {% endif %}
 {% endblock %}

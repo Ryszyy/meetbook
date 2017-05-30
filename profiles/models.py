@@ -27,19 +27,33 @@ class UserProfile(models.Model):
     location = models.ForeignKey(Location, null=True, blank=True, on_delete=models.CASCADE)
     slug = models.SlugField(blank=True)
     picture = models.ImageField(upload_to=upload_location, null=True, blank=True)
-    friends = models.ManyToManyField('self', blank=True)
+    friends = models.ManyToManyField('self',
+                                     blank=True)
+    pending = models.ManyToManyField('self',
+                                     blank=True,
+                                     through="Invite",
+                                     through_fields=('r_to', 'r_from'),
+                                     symmetrical=False)
     bio = models.TextField(blank=True, null=True)
-
-    # def clean(self):
-    #     if self.user_auth in self.friends:
-    #         raise ValidationError("Can't do that")
 
     def __str__(self):
         return self.user_auth.username
 
 
+class Invite(models.Model):
+    r_from = models.ForeignKey(UserProfile, blank=True, related_name="r_from")
+    r_to = models.ForeignKey(UserProfile, blank=True, related_name="r_to")
+    when = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ['r_from', 'r_to']
+
+    def __str__(self):
+        return (f'From {self.r_from} to {self.r_to}')
+
+
 def pre_save_reciver_page_model(sender, instance, *args, **kwargs):
-    if instance.slug == 'page-slug' or instance.slug == '':
+    if instance.slug == '':
         instance.slug = unique_slug_generator(instance)
 
 
@@ -68,21 +82,31 @@ class Intrest(models.Model):
 
 class GroupProfile(models.Model):
     """docstring for GroupProfile"""
-    group = models.OneToOneField(Group, unique=True)
+    name = models.CharField(max_length=120, unique=True)
     owner = models.ForeignKey(UserProfile, related_name="owner")
     intrest = models.ManyToManyField(Intrest)
     date = models.DateTimeField(auto_now=False, auto_now_add=False)
     members = models.ManyToManyField(UserProfile)
+    slug = models.SlugField(blank=True)
 
     def __str__(self):
-        return self.group.name
+        return self.name
+
+
+pre_save.connect(pre_save_reciver_page_model, sender=GroupProfile)
 
 
 class Event(models.Model):
     name = models.CharField(max_length=120)
     location = models.ForeignKey(Location)
-    date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    date = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, )
     intrest = models.ForeignKey(Intrest)
+    members = models.ManyToManyField(UserProfile, blank=True)
+    slug = models.SlugField(blank=True)
+    creator = models.ForeignKey(UserProfile, related_name="creator", blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+
+pre_save.connect(pre_save_reciver_page_model, sender=Event)

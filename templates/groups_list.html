@@ -1,0 +1,50 @@
+{% extends "basebase.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% block sidepicture %}
+	{% if user.is_authenticated %}
+		{% if profile.picture %}
+			<a href="{% url 'user_detail' user.username %}"><img src="{{ profile.picture.url }}" width="185" height="185"></a>
+		{% else %}
+			<a href="{% url 'user_detail' user.username %}"><img src="/media/default/defaultuser.png" width="185" height="185"></a>
+		{% endif %}
+	{% endif %}
+{% endblock %}
+{% block content %}
+	<div class="col-md-12 col-md-offset-2" style="float: left">
+		<h1>Search Group</h1>
+		<hr>
+		<ul style="padding-left: 0px;list-style-type: none; float: left">
+			{% for group in groups_list %}
+				<li><h4 style="display: inline"><a href="{% url 'group_detail' group.slug %}">{{group|capfirst}}</a></h4></li>
+				<br>
+			{% endfor %}
+		</ul>
+	</div>
+{% endblock %}
+{% block friends %}
+	<div style="margin-top: 10px; float: left; padding: 20px ; margin-left: 300px;">
+		<h1>Create Group</h1><br>
+		<div style="margin-left: auto;margin-right: auto;width: 6em">
+			<a href="" >
+				<button type="submit" class="btn btn-success">Create</button>
+			</a>
+		</div>
+		<br>
+		<!-- 	<h1>Your Events</h1>
+		{% for group in my_events %}
+				<p><h4 style="display: inline"><a href="{% url 'event_detail' event.slug %}">{{event}}</a> - </h4><h6 style="display: inline">
+				{% if event.date|naturalday == 'today' %}
+						{% if 'ago' in event.date|naturaltime %}
+								started {{event.date|naturaltime}}
+						{% endif %}
+				{% else %}
+						{{event.date|naturalday}}
+				{% endif %}
+		</h6></p>
+	{% endfor %} -->
+</div>
+{% endblock %}
+{% block footer %}
+<li style="float: right; padding-right: 10px;"><small><a id="footer" href="{% url 'past_events' %}">past events</a></small></li>
+{% endblock %}

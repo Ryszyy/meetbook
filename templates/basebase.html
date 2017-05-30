@@ -15,9 +15,20 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 		<link rel="stylesheet" href="{% static 'css/main.css' %}">
 		<link rel="stylesheet" href="{% static 'css/index_sidebar.css' %}">
+		<style type="text/css">
+		#footer:hover {
+		color: black;
+		text-decoration: none;
+		}
+		#footer {
+		color: #e3e3e3;
+				}
+		</style>
 		
 		{% block head %}
 		{% endblock %}
+		
+		
 	</head>
 	<body>
 		<nav class="navbar navbar-inverse navbar-fixed-top">
@@ -62,8 +73,9 @@
 									<h3 style="padding-left: 10px;">{{ user.first_name }} {{ user.last_name }}</h3>
 								{% endif %} -->
 							</li>
-							<li><a href="#"><h4>Groups</h4></a></li>
-							<li><a href="#"><h4>Events</h4></a></li>
+							<li><a href="{% url 'users_list' %}"><h4>Users</h4></a></li>
+							<li><a href="{% url 'groups_list' %}"><h4>Groups</h4></a></li>
+							<li><a href="{% url 'events_list' %}"><h4>Events</h4></a></li>
 						</ul>
 						<ul class="nav nav-sidebar">
 						</ul>
@@ -87,7 +99,10 @@
 		<hr>
 		<footer style="float: right; padding-right: 40px;">
 			<ul style=" list-style-type: none;">
-				<li style = "float: left;"><p>&copy; 2017 Meetbook, Inc.</p></li>
+				<li style = "float: right;"><p>&copy; 2017 Meetbook, Inc.</p></li>
+				{% block footer %}
+					
+				{% endblock %}
 			</ul>
 		</footer>
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

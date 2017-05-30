@@ -1,5 +1,74 @@
-{% extends "basebase.html" %}
-
+{% extends "base_detail.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
 {% block content %}
-<h1>{{ msg }}</h1>
-{% endblock %}
+	<div class="jumbotron col-md-10 col-md-offset-1" style="padding-top: 20px; margin-top: 20px; float: left;">
+		<div class="container">
+			<div>
+				<div style="float: left; padding-right: 40px; ">
+					<h1 style="text-align: center;">
+					{{object|capfirst}}
+					</h1>
+					{% if object.picture %}
+						<img src="{{ object.picture.url }}" width="300" height="300">
+					{% else %}
+						<img src="/media/default/defaultuser.png" width="300" height="300">
+					{% endif %}
+					<br style="clear: left;" />
+				</div>
+				<div style="float: left; padding-top: 130px;">
+					{% if object.user_auth.first_name  %}
+						<p>Forename : {{ object.user_auth.first_name }}</p>
+						<p>Surname : {{ object.user_auth.last_name }}</p>
+						<p>Location : {{ object.location.city }}</p>
+					{% endif %}
+
+					{% if user|lower == param|lower or object in profile.friends.all %}
+						<p>Email : {{ object.user_auth.email }}</p>
+					{% endif %}
+
+					{% if user|lower == param|lower %}
+						<a href="{% url 'user_update' user.username %}">Update informations</a>
+						{% elif object == req_sent.r_to %}
+						<h4>Friend request was sent</h4>
+						{% elif object not in profile.friends.all and object != req_sent.r_to  %}
+						<form method="post" action="{% url 'friend_add' object %}">
+							{% csrf_token %}
+							<button type="submit" class="btn btn-success">Add Friend</button>
+						</form>
+					{% endif %}
+				</div>
+				<div style="margin-top: 20px; float: right; padding: 20px ;padding-right:50px;border-width: 1px;border-style: solid;max-width: 300px;background-color: #f5f5f5;min-width: 250px;">
+					<h3>Friends list</h3>
+					<hr>
+					{% if user.is_authenticated %}
+						{% for friend in object.friends.all %}
+							<a href="{% url 'user_detail' friend.user_auth.username %}">{{friend}}</a> - <small>{{friend.user_auth.last_login|naturaltime}}</small><br>
+						{% endfor %}
+					{% endif %}
+					</div><!-- /.blog-sidebar -->
+					<div style="margin-top: 20px;margin-right: 20px; float: right; padding: 20px ;padding-right:50px;border-width: 1px;border-style: solid;max-width: 300px;background-color: #f5f5f5;max-width: 190px;">
+						<h3>Groups list</h3>
+						<hr>
+						{% if user.is_authenticated %}
+						
+						{% endif %}
+						</div><!-- /.blog-sidebar -->
+					</div>
+				</div>
+				<div class="container">
+					<br>
+					{% if object.bio %}
+						<h2>Bio</h2>
+						<p>{{ object.bio }}</p>
+					{% endif %}
+				</div>
+			</div>
+		{% endblock %}
+		{% block footer %}
+			{% if user.is_authenticated and user|lower == param|lower %}
+				<li style="float: right; padding-right: 10px;"><small><a id="footer" href="{% url 'user_delete' user.username %}">delete account</a></small></li>
+				{% elif object in profile.friends.all%}
+				<li style="float: right; padding-right: 10px;"><small><a id="footer" href="{% url 'friend_delete' object %}">remove friend</a></small></li>
+			{% endif %}
+		{% endblock %}
