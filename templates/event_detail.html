@@ -5,10 +5,15 @@
 	<div class="jumbotron col-md-10 col-md-offset-1" style="padding-top: 20px; margin-top: 20px; float: left;">
 		<div class="container">
 			<div>
-				<div style="float: left; padding-right: 40px; ">
+				<div style="float: left; padding-right: 40px; max-width: 800px;">
 					<h1 style="text-align: center;">
 					{{object|capfirst}}
+					{% if object.creator == profile %}
+						- Your event
+					{% endif %}
+					<br>
 					</h1>
+					
 					<p>Date : {{ object.date }}</p>
 					
 					<p>Creator : {{ object.creator.user_auth.first_name }} {{ object.creator.user_auth.last_name }}</p>
@@ -31,6 +36,9 @@
 				</div>
 				<div style="margin-top: 20px; float: right; padding: 20px ;padding-right:50px;border-width: 1px;border-style: solid;max-width: 300px;background-color: #f5f5f5;min-width: 250px;">
 					<h3>Members</h3>
+					{% if object.creator == profile %}
+						<small>As creator you can delete members</small>
+					{% endif %}
 					<hr>
 					{% if user.is_authenticated %}
 						{% for member in object.members.all %}
@@ -42,7 +50,7 @@
 								{% endif %}
 							</a>
 							{% if object.creator.user_auth == user %}
-							<a id="delete_mem" href="{% url 'member_delete' member.slug %}"><span class="glyphicon glyphicon-remove" aria-hidden="true" style="float: right;"></span></a>
+								<a id="delete_mem" href="{% url 'member_delete' member.slug %}"><span class="glyphicon glyphicon-remove" aria-hidden="true" style="float: right;"></span></a>
 							{% endif %}
 							<br>
 						{% endfor %}
@@ -53,9 +61,9 @@
 		</div>
 	{% endblock %}
 	{% block footer %}
-	{% if profile == object.creator %}
-		{% if time %}
-			<li style="float: right; padding-right: 10px;"><small><a id="footer" href="{% url 'event_delete' object.slug %}">delete event</a></small></li>
+		{% if profile == object.creator %}
+			{% if time %}
+				<li style="float: right; padding-right: 10px;"><small><a id="footer" href="{% url 'event_delete' object.slug %}">delete event</a></small></li>
+			{% endif %}
 		{% endif %}
-	{% endif %}
 	{% endblock %}

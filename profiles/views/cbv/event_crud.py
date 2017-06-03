@@ -114,7 +114,9 @@ def event_join(request, slug):
 @login_required
 def event_delete(request, slug):
     profile = UserProfile.objects.get(user_auth=request.user)
-    if profile.slug == slug:
+    event = Event.objects.get(slug=slug)
+
+    if profile == event.creator:
         context = {
             "Title": "Do you want to delete the event?",
             "Confirmation": "Delete",
