@@ -13,9 +13,9 @@
 {% block sidepicture %}
 	{% if user.is_authenticated %}
 		{% if profile.picture %}
-			<a style="hover:none" href="{% url 'user_detail' user.username %}"><img src="{{ profile.picture.url }}" width="185" height="185"></a>
+			<a style="hover:none" href="{% url 'user_detail' profile.slug %}"><img src="{{ profile.picture.url }}" width="185" height="185"></a>
 		{% else %}
-			<a href="{% url 'user_detail' user.username %}"><img src="/media/default/defaultuser.png" width="185" height="185"></a>
+			<a href="{% url 'user_detail' profile.slug %}"><img src="\media\default\defaultuser.png" width="185" height="185"></a>
 		{% endif %}
 	{% endif %}
 {% endblock %}
@@ -83,16 +83,16 @@
 			
 			<hr>
 			{% for friend in profile.friends.all %}
-				<p><a href="{% url 'user_detail' friend.user_auth.username %}">{{friend}}</a> - {{friend.user_auth.last_login|naturaltime}}</p>
+				<p><a href="{% url 'user_detail' friend.slug %}">{{friend}}</a> - {{friend.user_auth.last_login|naturaltime}}</p>
 			{% endfor %}
 			<hr>
 			<h4>Requests</h4>
 			{% for frequest in frequests %}
 				{% if frequest.r_from.user_auth.first_name %}
 					<p>from
-						<a href="{% url 'user_detail' frequest.r_from.user_auth.username %}" >{{frequest.r_from.user_auth.first_name}} {{frequest.r_from.user_auth.last_name}}</a> - {{frequest.when|naturaltime}}</p>
+						<a href="{% url 'user_detail' frequest.r_from.slug %}" >{{frequest.r_from.user_auth.first_name}} {{frequest.r_from.user_auth.last_name}}</a> - {{frequest.when|naturaltime}}</p>
 					{% else %}
-						<p>from <a href="{% url 'user_detail' frequest.r_from.user_auth.username %}">{{frequest.r_from.user_auth}}</a> - {{frequest.when|naturaltime}}</p>
+						<p>from <a href="{% url 'user_detail' frequest.r_from.slug %}">{{frequest.r_from.user_auth}}</a> - {{frequest.when|naturaltime}}</p>
 					{% endif %}
 				{% endfor %}
 			</div>

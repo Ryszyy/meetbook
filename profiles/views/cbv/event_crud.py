@@ -75,6 +75,8 @@ class PastEventsList(ListView):
     def get_context_data(self, **kwargs):
         context = super(PastEventsList, self).get_context_data(**kwargs)
         events = Event.objects.filter(date__lte=datetime.date.fromordinal(datetime.date.today().toordinal() - 1))
+        profile = UserProfile.objects.get(user_auth=self.request.user)
+        context['profile'] = profile
         context['events_list'] = events
         return context
 

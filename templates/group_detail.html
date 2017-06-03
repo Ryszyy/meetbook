@@ -34,7 +34,7 @@
 					<hr>
 					{% if user.is_authenticated %}
 						{% for member in object.members.all %}
-							<a href="{% url 'user_detail' member.user_auth.username %}">
+							<a href="{% url 'user_detail' member.slug %}">
 								{% if member.user_auth.first_name %}
 									{{member.user_auth.first_name}} {{member.user_auth.last_name}}
 								{% else %}

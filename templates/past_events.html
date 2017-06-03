@@ -4,15 +4,15 @@
 {% block sidepicture %}
 	{% if user.is_authenticated %}
 		{% if profile.picture %}
-			<a href="{% url 'user_detail' user.username %}"><img src="{{ profile.picture.url }}" width="185" height="185"></a>
+			<a href="{% url 'user_detail' profile.slug %}"><img src="{{ profile.picture.url }}" width="185" height="185"></a>
 		{% else %}
-			<a href="{% url 'user_detail' user.username %}"><img src="/media/default/defaultuser.png" width="185" height="185"></a>
+			<a href="{% url 'user_detail' profile.slug %}"><img src="\media\default\defaultuser.png" width="185" height="185"></a>
 		{% endif %}
 	{% endif %}
 {% endblock %}
 {% block content %}
 	<div class="col-md-12 col-md-offset-2">
-		<h1>Search Event</h1>
+		<h1>Past Event</h1>
 		<hr>
 		<ul style="padding-left: 0px;list-style-type: none; float: left">
 			{% for event in events_list %}

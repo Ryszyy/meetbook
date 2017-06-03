@@ -6,7 +6,7 @@
 		{% if profile.picture %}
 			<a href="{% url 'user_detail' user.username %}"><img src="{{ profile.picture.url }}" width="185" height="185"></a>
 		{% else %}
-			<a href="{% url 'user_detail' user.username %}"><img src="/media/default/defaultuser.png" width="185" height="185"></a>
+			<a href="{% url 'user_detail' user.username %}"><img src="\media\default\defaultuser.png" width="185" height="185"></a>
 		{% endif %}
 	{% endif %}
 {% endblock %}
@@ -16,7 +16,7 @@
 		<hr>
 		<ul style="padding-left: 0px;list-style-type: none; float: left">
 			{% for userq in users_list %}
-				<li><a href="{% url 'user_detail' userq.user_auth.username %}">
+				<li><a href="{% url 'user_detail' userq.slug %}">
 					{% if userq.picture %}
 						<img src="{{ userq.picture.url }}" width="70" height="70">
 					{% else %}
@@ -44,13 +44,13 @@
 		
 		<hr>
 		{% for friend in profile.friends.all %}
-			<p><a href="{% url 'user_detail' friend.user_auth.username %}">{{friend}}</a> - {{friend.user_auth.last_login|naturaltime}}</p>
+			<p><a href="{% url 'user_detail' friend.slug %}">{{friend}}</a> - {{friend.user_auth.last_login|naturaltime}}</p>
 		{% endfor %}
 		<hr>
 		{% if profile.pending %}
 			<h4>Requests sent</h4>
 			{% for req in req_sent %}
-				<p>To <a href="{% url 'user_detail' req.r_to %}">{{req.r_to}}</a> - {{req.when|naturaltime}}</p>
+				<p>To <a href="{% url 'user_detail' req.r_to.slug %}">{{req.r_to}}</a> - {{req.when|naturaltime}}</p>
 			{% endfor %}
 		{% endif %}
 	</div>
