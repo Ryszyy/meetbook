@@ -51,7 +51,9 @@
 						<h3>Groups list</h3>
 						<hr>
 						{% if user.is_authenticated %}
-						
+						{% for group in groups %}
+							<a href="{% url 'group_detail' group.slug %}">{{group}}</a>
+						{% endfor %}
 						{% endif %}
 						</div><!-- /.blog-sidebar -->
 					</div>

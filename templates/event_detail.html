@@ -16,7 +16,13 @@
 					
 					<p>Date : {{ object.date }}</p>
 					
-					<p>Creator : {{ object.creator.user_auth.first_name }} {{ object.creator.user_auth.last_name }}</p>
+					<p>Creator :
+						{% if object.creator.user_auth.first_name %}
+							{{object.creator.user_auth.first_name}} {{object.creator.user_auth.last_name}}
+						{% else %}
+							{{object.creator}}
+						{% endif %}
+					</p>
 					<p>Location : {{ object.location.city }}</p>
 					<hr>
 					{% if profile not in object.members.all and time %}
@@ -24,10 +30,15 @@
 							{% csrf_token %}
 							<button type="submit" class="btn btn-success">Join Event</button>
 						</form>
-						{% elif profile in object.members.all %}
-						<p>Enjoy the event</p>
 						{% elif not time %}
 						<p>Too late to join</p>
+						{% elif profile == object.creator %}
+						<a href="{% url 'event_update' object.slug %}">
+							{% csrf_token %}
+							<button type="submit" class="btn btn-success">Update Informations</button>
+						</a>
+						{% elif profile in object.members.all %}
+						<p>Enjoy the event</p>
 					{% endif %}
 					<br style="clear: left;" />
 				</div>
@@ -35,9 +46,11 @@
 					
 				</div>
 				<div style="margin-top: 20px; float: right; padding: 20px ;padding-right:50px;border-width: 1px;border-style: solid;max-width: 300px;background-color: #f5f5f5;min-width: 250px;">
-					<h3>Members</h3>
-					{% if object.creator == profile %}
-						<small>As creator you can delete members</small>
+					<h2>Members</h2>
+					{% if object.creator == profile and time %}
+						<a href="{% url 'event_members' object.slug %}">
+							<button type="submit" class="btn-primary btn-sm">Manage members</button>
+						</a>
 					{% endif %}
 					<hr>
 					{% if user.is_authenticated %}
@@ -49,9 +62,6 @@
 									{{member}}
 								{% endif %}
 							</a>
-							{% if object.creator.user_auth == user %}
-								<a id="delete_mem" href="{% url 'member_delete' member.slug %}"><span class="glyphicon glyphicon-remove" aria-hidden="true" style="float: right;"></span></a>
-							{% endif %}
 							<br>
 						{% endfor %}
 					{% endif %}
@@ -65,5 +75,7 @@
 			{% if time %}
 				<li style="float: right; padding-right: 10px;"><small><a id="footer" href="{% url 'event_delete' object.slug %}">delete event</a></small></li>
 			{% endif %}
+		{% else %}
+			<li style="float: right; padding-right: 10px;"><small><a id="footer" href="{% url 'event_member_delete' object.slug %}">resign</a></small></li>
 		{% endif %}
 	{% endblock %}

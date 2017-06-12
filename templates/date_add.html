@@ -1,0 +1,46 @@
+{% extends "base_detail.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block css %}
+	<link rel="stylesheet" href="{% static 'css/jquery.datetimepicker.css' %}">
+{% endblock %}
+{% block content %}
+	<div class="jumbotron col-md-10 col-md-offset-1" style=" min-height: 450px; padding-top: 20px; margin-top: 20px; float: left;">
+		<h1 style="text-align: center">Specify your free time</h1>
+		<div class="container col-md-offset-2 col-md-8">
+		<div class="container col-md-offset-2 col-md-8">
+			{% if messages %}
+				<div style="text-align: center" class="alert alert-danger">
+					<strong >{{messages}}</strong>
+				</div>
+			{% endif %}
+			</div>
+			<div>
+				<form style="display:inline;" name="specify_time" method="post">
+					{% csrf_token %}
+					<div  style="padding-top: 50px;">
+					<div class="container col-md-offset-2 col-md-4">
+					<p style="text-align: center">Start</p>
+					<input id="datetimepickers" type="text" name="date_start" value="{{date_start}}" class="form-control">
+					</div>
+					<div class="container col-md-4">
+					<p style="text-align: center">End</p>
+					<input id="datetimepickere" type="text" name="date_end" value="{{date_end}}" class="form-control">
+					</div>
+					<br>
+					<div class="col-md-5"></div>
+					<div style="margin-top: 40px;" class="col-md-2">
+					<button  name="specify" type="submit" class="btn btn-success btn-lg">Confirm</button>
+					</div>
+					<div class="col-md-5"></div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block scripts %}
+	<script src="{% static 'js/jquery.datetimepicker.full.js' %}"></script>
+	<script>jQuery('#datetimepickers').datetimepicker();</script>
+	<script>jQuery('#datetimepickere').datetimepicker();</script>
+{% endblock %}

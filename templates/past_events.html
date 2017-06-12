@@ -7,7 +7,7 @@
 			<a href="{% url 'user_detail' profile.slug %}"><img src="{{ profile.picture.url }}" width="185" height="185"></a>
 		{% else %}
 			<a href="{% url 'user_detail' profile.slug %}"><img src="\media\default\defaultuser.png" width="185" height="185"></a>
-		{% endif %}
+		{% endif %} 
 	{% endif %}
 {% endblock %}
 {% block content %}
@@ -16,7 +16,7 @@
 		<hr>
 		<ul style="padding-left: 0px;list-style-type: none; float: left">
 			{% for event in events_list %}
-				<li><h4 style="display: inline"><a href="">{{event}}</a> - </h4>
+				<li><h4 style="display: inline"><a href="{% url 'event_detail' event.slug %}">{{event}}</a> - </h4>
 				<h6 style="display: inline">{{event.date|naturalday}}</h6></li>
 			<br>
 		{% endfor %}
@@ -24,6 +24,42 @@
 	
 </div>
 {% endblock %}
+
+
+{% block friends %}
+<div style="margin-top: 10px; float: right; padding: 20px ; margin-right: 140px">
+	<h1>Events You Created</h1>
+	<div style="padding-left: 10px; min-height: 150px">
+		{% for event in created_events %}
+			<p><h4 style="display: inline"><a href="{% url 'event_detail' event.slug %}">{{event|capfirst}}</a> - </h4><h6 style="display: inline">
+			{% if event.date|naturalday == 'today' %}
+				{% if 'ago' in event.date|naturaltime %}
+					started {{event.date|naturaltime}}
+				{% endif %}
+			{% else %}
+				{{event.date|naturalday}}
+			{% endif %}
+		</h6></p>
+	{% endfor %}
+
+</div>
+<h1>Your Events</h1>
+<div style="padding-left: 10px;">
+	{% for event in member_of_event %}
+		<p><h4 style="display: inline"><a href="{% url 'event_detail' event.slug %}">{{event|capfirst}}</a> - </h4><h6 style="display: inline">
+		{% if event.date|naturalday == 'today' %}
+			{% if 'ago' in event.date|naturaltime %}
+				started {{event.date|naturaltime}}
+			{% endif %}
+		{% else %}
+			{{event.date|naturalday}}
+		{% endif %}
+	</h6></p>
+{% endfor %}
+</div>
+</div>
+{% endblock %}
+
 {% block footer %}
 <li style="float: right; padding-right: 10px;"><small><a id="footer" href="{% url 'events_list' %}">new events</a></small></li>
 {% endblock %}

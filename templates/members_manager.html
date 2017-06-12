@@ -1,0 +1,26 @@
+{% extends "base_detail.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+	<div class="jumbotron col-md-10 col-md-offset-1" style=" min-height: 450px; padding-top: 20px; margin-top: 20px; float: left;">
+		<h1 style="text-align: center">Manage members</h1>
+		<div class="container col-md-offset-4 col-md-4">
+			
+			<form name="create" method="post" >
+				{% csrf_token %}
+				{{ form|crispy }}
+				<br>
+				<div class="col-md-offset-4">
+				<button name="create" type="submit" class="btn btn-success"><h4>Update</h4></button>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+	{% block footer %}
+		{% if profile == object.creator or profile == object.owner %}
+			{% if time %}
+				<li style="float: right; padding-right: 10px;"><small>Be responsible</small></li>
+			{% endif %}
+		{% endif %}
+	{% endblock %}

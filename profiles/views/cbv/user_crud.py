@@ -1,13 +1,13 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from profiles.models import UserProfile, Location, Invite
+from profiles.models import UserProfile, Location, Invite, GroupProfile
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from profiles.forms import Form_update_user, Form_update_user_later
-
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 
 class UserDetailView(DetailView):
@@ -17,8 +17,12 @@ class UserDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(UserDetailView, self).get_context_data(**kwargs)
         profile = UserProfile.objects.get(user_auth=self.request.user)
-        context['profile'] = profile
         slug = self.request.path.split('/')[-1]
+        p = UserProfile.objects.get(slug=slug)
+        group = GroupProfile.objects.filter(members=p)
+        context['groups'] = group
+        context['profile'] = profile
+        
         context.update({'param': slug})
         try:
             other = UserProfile.objects.get(slug=slug)
@@ -77,11 +81,13 @@ def user_delete(request, slug):
 
 @login_required
 def user_update(request, slug):
-    if request.user.username == slug:
-        if not (request.user.first_name == '' or request.user.last_name == ''):
+    profile = UserProfile.objects.get(user_auth=request.user)
+    if profile.slug == slug:
+        if not (profile.user_auth.first_name == '' or profile.user_auth.last_name == ''):
             if request.method == 'POST':
-                profile = UserProfile.objects.get(user_auth=request.user)
-                form = Form_update_user_later(request.POST, request.FILES, initial={'bio': profile.bio, 'location': profile.location, 'picture': profile.picture})
+                form = Form_update_user_later(request.POST,
+                                              request.FILES,
+                                              initial={'bio': profile.bio, 'location': profile.location, 'picture': profile.picture})
                 if form.is_valid():
                     bio = form.cleaned_data['bio']
                     location = form.cleaned_data['location']
@@ -91,6 +97,7 @@ def user_update(request, slug):
                     profile.bio = bio
                     profile.location = local
                     profile.picture = picture
+                    print("HELLO")
                     profile.save()
 
                     return redirect('user_detail', slug=request.user)
@@ -98,7 +105,6 @@ def user_update(request, slug):
                     "form": form,
                 }
                 return render(request, 'user_update.html', context)
-            profile = UserProfile.objects.get(user_auth=request.user)
             form = Form_update_user_later(initial={'bio': profile.bio,
                                                    'location': profile.location,
                                                    'picture': profile.picture})
@@ -106,7 +112,6 @@ def user_update(request, slug):
 
         else:
             if request.method == 'POST':
-                profile = UserProfile.objects.get(user_auth=request.user)
                 form = Form_update_user(request.POST, request.FILES)
                 if form.is_valid():
                     first_name = form.cleaned_data['first_name']

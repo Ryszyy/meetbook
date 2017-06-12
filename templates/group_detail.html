@@ -5,53 +5,98 @@
 	<div class="jumbotron col-md-10 col-md-offset-1" style="padding-top: 20px; margin-top: 20px; float: left;">
 		<div class="container">
 			<div>
-				<div style="float: left; padding-right: 40px; ">
+				<div style="float: left;" class="col-md-6">
 					<h1 style="text-align: center;">
 					{{object|capfirst}}
 					</h1>
-					<p>Date : {{ object.date }}</p>
 					{% if object.owner.user_auth.first_name %}
-					<p>Creator : {{ object.owner.user_auth.first_name|capfirst }} {{ object.owner.user_auth.last_name|capfirst }}</p>
+						<p>Creator : {{ object.owner.user_auth.first_name|capfirst }} {{ object.owner.user_auth.last_name|capfirst }}</p>
 					{% else %}
-					<p>Creator : {{ object.owner.user_auth.username|capfirst }}</p>
+						<p>Creator : {{ object.owner.user_auth.username|capfirst }}</p>
 					{% endif %}
-					
-
 					<p>Field of Intrests -
-				
 						{% for i in object.intrest.all %}
-							{{i}},
+							{{i}}
+							{% if not forloop.last == 1 %}
+								/
+							{% endif %}
 						{% endfor %}
 					</p>
-					<hr>
-					<br style="clear: left;" />
-				</div>
-				<div style="float: left; padding-top: 130px;">
-					
-				</div>
-				<div style="margin-top: 20px; float: right; padding: 20px ;padding-right:50px;border-width: 1px;border-style: solid;max-width: 300px;background-color: #f5f5f5;min-width: 250px;">
-					<h3>Members</h3>
-					<hr>
-					{% if user.is_authenticated %}
-						{% for member in object.members.all %}
-							<a href="{% url 'user_detail' member.slug %}">
-								{% if member.user_auth.first_name %}
-									{{member.user_auth.first_name}} {{member.user_auth.last_name}}
-								{% else %}
-									{{member|capfirst}}
-								{% endif %}
-							</a><br>
-						{% endfor %}
+					{% if profile in object.members.all or profile == object.owner %}
+					{% if event %}
+						<p>Next Event: <a href="{% url 'event_group' event.slug %}">{{ event }}</a>
+						<p>At {{event.date}}</p>
+					</p>
+				{% endif %}
+				{% if object.owner == profile %}
+					{% if object.date and not event %}
+						<h4>Most of members available at: {{object.date}}</h4>
+						{% if not event %}
+						<a href="{% url 'group_event_create' object.slug %}">
+							<button type="submit" class="btn-primary btn-lg">Event within group</button>
+						</a>
+						{% endif %}
 					{% endif %}
-					</div><!-- /.blog-sidebar -->
+				{% endif %}
+				{% else %}
+				<hr>
+				<small>If you want to join contact with creator of the group</small>
+				<br>
+						<a href="{% url 'message_creator' object.slug %}">
+							<button type="submit" class="btn-primary">Contact</button>
+						</a>
+				{% endif %}
+				
+				{% if object.owner == profile and object.message %}
+				<hr style="border-color:black">
+				<h4>Recent message from user</h4>
+				{{object.message}}
+				{% endif %}
+				<br style="clear: left;" />
+			</div>
+			<div style="margin-top: 20px; float: right; padding: 20px ;border-width: 1px;border-style: solid;max-width: 250px;background-color: #f5f5f5;">
+				<h2>Members</h2>
+				{% if object.owner == profile %}
+					<a href="{% url 'group_members' object.slug %}">
+						<button type="submit" class="btn-primary btn-sm">Manage members</button>
+					</a>
+				{% endif %}
+				<hr>
+				{% if user.is_authenticated %}
+					{% for member in object.members.all %}
+						<a href="{% url 'user_detail' member.slug %}">
+							{% if member.user_auth.first_name %}
+								{{member.user_auth.first_name}} {{member.user_auth.last_name}}
+							{% else %}
+								{{member|capfirst}}
+							{% endif %}
+						</a><br>
+					{% endfor %}
+				{% endif %}
+				</div><!-- /.blog-sidebar -->
+				{% if profile in object.members.all %}
+					<div style="margin-top: 20px; margin-right: 20px; float: right; padding: 20px ;border-width: 1px;border-style: solid;max-width: 250px;background-color: #f5f5f5;">
+						<h2>Your Dates</h2>
+						
+						<a href="{% url 'date_add' object.slug %}">
+							<button type="submit" class="btn-primary btn-sm">Add date</button>
+						</a>
+						
+						<hr>
+						{% if user.is_authenticated %}
+							{% for time in u_time %}
+								<small>{{time}}</small>
+								<br>
+							{% endfor %}
+						{% endif %}
+						</div><!-- /.blog-sidebar -->
+					{% endif %}
 				</div>
 			</div>
 		</div>
 	{% endblock %}
 	{% block footer %}
-		{% if profile == object.creator %}
-			{% if time %}
-				<li style="float: right; padding-right: 10px;"><small><a id="footer" href="{% url 'event_delete' object.slug %}">delete event</a></small></li>
-			{% endif %}
+		{% if profile == object.owner %}
+			<li style="float: right; padding-right: 10px;"><small><a id="footer" href="{% url 'group_delete' object.slug %}">delete group</a></small></li>
 		{% endif %}
 	{% endblock %}

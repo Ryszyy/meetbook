@@ -16,7 +16,11 @@ class Form_register(forms.Form):
         password = self.cleaned_data.get('password')
         password_bis = self.cleaned_data.get('password_bis')
         email = self.cleaned_data.get('email')
-        login = self.cleaned_data.get('login').lower()
+        login = self.cleaned_data.get('login')
+        try:
+            login = login.lower()
+        except:
+            pass
         if password != password_bis:
             raise forms.ValidationError("Passwords are not identical.")
 
@@ -50,7 +54,6 @@ class Form_update_user(forms.Form):
 
 
 class Form_update_user_later(forms.Form):
-
     bio = forms.CharField(label='Bio', widget=forms.Textarea)
     location = forms.CharField(label="City")
     picture = forms.ImageField(label="Picture")

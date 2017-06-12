@@ -2,14 +2,7 @@
 {% load crispy_forms_tags %}
 {% load humanize %}
 {% load static %}
-{% block head %}
-	<style>
-	#map {
-	height: 100%;
-	}
-	</style>
-	<script src="{% static 'js/map.js' %}" type="text/javascript"></script>
-{% endblock %}
+
 {% block sidepicture %}
 	{% if user.is_authenticated %}
 		{% if profile.picture %}
@@ -25,8 +18,8 @@
 		width="700"
 		height="500"
 		frameborder="0" style="border:0"
-		src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD1p_jSHFFqhSiVL6BttWb8fFF522u510g
-		&q={{ profile.location }}" allowfullscreen>
+		src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA6MINcThkhsZSYT04VHqXohqhI9xmT-LI
+		&q={{ profile.location }}">
 		</iframe>
 		
 		<div id="map"></div>

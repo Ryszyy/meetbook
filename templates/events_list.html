@@ -11,20 +11,14 @@
 	{% endif %}
 {% endblock %}
 {% block content %}
-	<div class="col-md-12 col-md-offset-2" style="float: left">
+	<div class="col-md-12 col-md-offset-2" style="float: left;">
 		<h1>Search Event</h1>
 		<hr>
 		<ul style="padding-left: 0px;list-style-type: none; float: left">
 			{% for event in events_list %}
-				<li><h4 style="display: inline"><a href="{% url 'event_detail' event.slug %}">{{event}}</a> - </h4>
+				<li><h4 style="display: inline"><a href="{% url 'event_detail' event.slug %}">{{event|capfirst}}</a> - </h4>
 				<h6 style="display: inline">
-				{% if event.date|naturalday == 'today' %}
-					{% if 'ago' in event.date|naturaltime %}
-						started {{event.date|naturaltime}}
-					{% endif %}
-				{% else %}
-					{{event.date|naturalday}}
-				{% endif %}
+				{{event.date|naturalday}}
 			</h6></li>
 			<br>
 		{% endfor %}
@@ -32,17 +26,30 @@
 </div>
 {% endblock %}
 {% block friends %}
-<div style="margin-top: 10px; float: left; padding: 20px ; margin-left: 300px;">
-	<h1>Create Event</h1><br>
-	<div style="margin-left: auto;margin-right: auto;width: 6em">
+<div style="margin-top: 10px; float: right; padding: 20px ; margin-right: 140px">
+	<h1>Events You Created</h1>
+	<div style="padding-left: 10px; min-height: 150px">
+		{% for event in created_events %}
+			<p><h4 style="display: inline"><a href="{% url 'event_detail' event.slug %}">{{event|capfirst}}</a> - </h4><h6 style="display: inline">
+			{% if event.date|naturalday == 'today' %}
+				{% if 'ago' in event.date|naturaltime %}
+					started {{event.date|naturaltime}}
+				{% endif %}
+			{% else %}
+				{{event.date|naturalday}}
+			{% endif %}
+		</h6></p>
+	{% endfor %}
+	<div style="margin-left: auto;">
 		<a href="{% url 'event_create' %}" >
-			<button type="submit" class="btn btn-success">Create</button>
+			<button type="submit" class="btn btn-success">Create New</button>
 		</a>
 	</div>
-	<br>
-	<h1>Your Events</h1>
-	{% for event in my_events %}
-		<p><h4 style="display: inline"><a href="{% url 'event_detail' event.slug %}">{{event}}</a> - </h4><h6 style="display: inline">
+</div>
+<h1>Your Events</h1>
+<div style="padding-left: 10px;">
+	{% for event in member_of_event %}
+		<p><h4 style="display: inline"><a href="{% url 'event_detail' event.slug %}">{{event|capfirst}}</a> - </h4><h6 style="display: inline">
 		{% if event.date|naturalday == 'today' %}
 			{% if 'ago' in event.date|naturaltime %}
 				started {{event.date|naturaltime}}
@@ -52,6 +59,7 @@
 		{% endif %}
 	</h6></p>
 {% endfor %}
+</div>
 </div>
 {% endblock %}
 {% block footer %}
