@@ -74,7 +74,8 @@ class FreeTime(models.Model):
     start_date = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
     end_date = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
     group = models.ForeignKey(GroupProfile)
-    user = models.ForeignKey(UserProfile, default=1)
+    user = models.ForeignKey(UserProfile)
+
 
     def __str__(self):
         readable_start = str(self.start_date)[5:]
@@ -112,4 +113,3 @@ class Event(models.Model):
 
 
 pre_save.connect(pre_save_reciver_page_model, sender=Event)
-

@@ -23,7 +23,8 @@ class Form_register(forms.Form):
             pass
         if password != password_bis:
             raise forms.ValidationError("Passwords are not identical.")
-
+        if len(password) < 6:
+            raise forms.ValidationError("Password must be longer then 6 chars")
         # obj = User.objects.get()
         if User.objects.filter(username=login).exists():
             raise forms.ValidationError("Login already exists")

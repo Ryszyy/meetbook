@@ -46,7 +46,7 @@ class GroupDetailView(DetailView):
         group = GroupProfile.objects.get(slug=slug)
         u_time = FreeTime.objects.filter(group=group, user=profile).order_by('start_date')
         try:
-            group_event = Event.objects.get(group=group, date__gte=datetime.datetime.now() - datetime.timedelta(hours=6))
+            group_event = Event.objects.get(group=group)
             context['event'] = group_event
         except Exception as e:
             print(str(e) + " group dont have any events")
@@ -210,7 +210,10 @@ def date_add(request, slug):
             #find latest startdate
 
 
-            latest_start = max(start_list)
+            try:
+                latest_start = max(start_list)
+            except:
+                pass
             error = False
             for end in end_list:
                 if latest_start < end:
@@ -219,16 +222,12 @@ def date_add(request, slug):
                     error=True
                     break
             if not error:
-                group.date = (latest_start)
-                group.save()
+                try:
+                    group.date = (latest_start)
+                    group.save()
+                except:
+                    pass
 
-            # for time in times.all():
-            #     time.start_date.
-
-
-            # for member in group.members.all():
-            #     m = UserProfile.objects.get(user_auth=member)
-            #     for time in m.time.all():
 
 
             return redirect('group_detail', slug=slug)
